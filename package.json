@@ -4,11 +4,14 @@
   "description": "A library for merging xsd with include",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "tsx src/testes.ts"
   },
   "keywords": [
     "xsd"
   ],
   "author": "maurelima",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "tsx": "^4.19.2"
+  }
 }
