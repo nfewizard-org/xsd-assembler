@@ -1,3 +1,4 @@
 node_modules
 src/testes.ts
 src/schemas
+dist
