@@ -18,10 +18,19 @@ export class XSDAssembler implements XSDAssemblerImpl{
     async assemble(filePath: string): Promise<string> {
         // Resolve todas as inclusões e aplica atributos no primeiro xs:schema
         const resolvedSchema = await this.resolver.resolveIncludes(filePath, true, path.dirname(filePath));
-
+    
+        // Normalizar as expressões regulares, removendo a duplicação das barras invertidas
+        const normalizedSchema = this.normalizeRegexPatterns(resolvedSchema);
+    
         // Mescla quaisquer propriedades adicionais usando o XSDPropertyMerger
-        const mergedSchema = this.merger.mergeProperties(resolvedSchema);
-
+        const mergedSchema = this.merger.mergeProperties(normalizedSchema);
+    
         return mergedSchema;
+    }
+    
+    // Função para normalizar as expressões regulares
+    private normalizeRegexPatterns(schemaContent: string): string {
+        // Substitui as ocorrências de \\ por \ (remover escape extra de barras invertidas)
+        return schemaContent.replace(/\\\\/g, '\\');
     }
 }

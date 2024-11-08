@@ -4,7 +4,7 @@
     "type": "git",
     "url": "https://github.com/nfewizard-org/xsd-assembler.git"
   },
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "This project aims to assemble, merge, and resolve dependencies in XSD files",
   "main": "dist/cjs/index.js",
   "types": "dist/cjs/index.d.ts",
