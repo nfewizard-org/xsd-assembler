@@ -1,18 +1,37 @@
 {
   "name": "xsd-assembler",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nfewizard-org/xsd-assembler.git"
+  },
   "version": "0.0.1",
-  "description": "A library for merging xsd with include",
+  "description": "This project aims to assemble, merge, and resolve dependencies in XSD files",
   "main": "dist/cjs/index.js",
   "types": "dist/cjs/index.d.ts",
+  "author": "maurelima",
+  "license": "GPL-3.0",
+  "funding": {
+    "type": "github",
+    "url": "https://github.com/sponsors/Maurelima?frequency=recurring&sponsor=Maurelima"
+  },
   "scripts": {
     "dev": "tsx src/testes.ts",
     "build": "rollup -c --bundleConfigAsCjs"
   },
-  "keywords": [
-    "xsd"
+  "files": [
+    "dist"
   ],
-  "author": "maurelima",
-  "license": "ISC",
+  "keywords": [
+    "xsd", 
+    "xml",
+    "schema",
+    "flattening",
+    "flatten",
+    "flattening xsd",
+    "flatten xsd",
+    "merge xsd",
+    "merging xsd"
+  ],
   "devDependencies": {
     "@rollup/plugin-terser": "^0.4.4",
     "@types/node": "^22.9.0",
