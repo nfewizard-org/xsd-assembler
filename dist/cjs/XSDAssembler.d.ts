@@ -8,4 +8,5 @@ export declare class XSDAssembler implements XSDAssemblerImpl {
     private merger;
     constructor(loader: XSDLoader, resolver: XSDIncludeResolver, merger: XSDPropertyMerger);
     assemble(filePath: string): Promise<string>;
+    private normalizeRegexPatterns;
 }

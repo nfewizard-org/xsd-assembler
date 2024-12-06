@@ -10,7 +10,7 @@ const teste = async () => {
     // builder.setMerger(merger).setAssembler(assembler);
 
     // Teste com caminho para o XSD
-    await builder.assemble('src/schemas/enviNFe_v4.00.xsd').then(result => {
+    await builder.assemble('src/schemas/consSitNFe_v4.00.xsd').then(result => {
         console.log("Resultado do merge:", result);
         fs.writeFileSync('src/schemas/teste.xsd', result)
     }).catch(error => {

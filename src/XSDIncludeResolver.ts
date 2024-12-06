@@ -2,7 +2,6 @@ import { XSDLoader } from './XSDLoader';
 import { XSDIncludeResolverImpl } from './protocols';
 import path from 'path';
 
-
 export class XSDIncludeResolver implements XSDIncludeResolverImpl {
     private loader: XSDLoader;
 
@@ -22,6 +21,38 @@ export class XSDIncludeResolver implements XSDIncludeResolverImpl {
         return schemaContent;
     }
 
+    // Função para reorganizar diretivas <xs:import> e <xs:include>
+    private reorderSchemaDirectives(schemaContent: string): string {
+        // Extrai todas as diretivas <xs:import> e <xs:include>
+        const importRegex = /<xs:import[^>]*\/>/g;
+        const includeRegex = /<xs:include[^>]*\/>/g;
+    
+        const imports = [...schemaContent.match(importRegex) || []];
+        const includes = [...schemaContent.match(includeRegex) || []];
+    
+        // Remove as diretivas do conteúdo original
+        let updatedSchema = schemaContent
+            .replace(importRegex, '')
+            .replace(includeRegex, '');
+    
+        // Identifica o fim da tag de abertura <xs:schema>
+        const schemaOpenTagMatch = updatedSchema.match(/<xs:schema[^>]*>/i);
+        if (!schemaOpenTagMatch) {
+            throw new Error("A tag <xs:schema> não foi encontrada no conteúdo do schema.");
+        }
+    
+        const schemaOpenTag = schemaOpenTagMatch[0];
+        const schemaOpenTagEndIndex = updatedSchema.indexOf(schemaOpenTag) + schemaOpenTag.length;
+    
+        // Separa o conteúdo antes e depois da tag <xs:schema>
+        const schemaStart = updatedSchema.slice(0, schemaOpenTagEndIndex);
+        const schemaRest = updatedSchema.slice(schemaOpenTagEndIndex);
+    
+        // Reinsere as diretivas após a abertura da tag <xs:schema>
+        return `${schemaStart}\n${imports.join('\n')}\n${includes.join('\n')}\n${schemaRest}`;
+    }
+
+    // Resolve recursivamente <xs:include> e aplica os atributos no primeiro arquivo
     async resolveIncludes(filePath: string, firstFile = true, basePath = '.'): Promise<string> {
         // Carrega o conteúdo inicial do XSD
         let xsdContent = await this.loader.load(filePath, firstFile);
@@ -36,7 +67,12 @@ export class XSDIncludeResolver implements XSDIncludeResolverImpl {
             xsdContent = xsdContent.replace(match[0], includedContent);
         }
 
-        // Aplica atributos no primeiro arquivo
-        return firstFile ? this.applySchemaAttributes(xsdContent) : xsdContent;
+        // Aplica atributos e reorganiza as diretivas no primeiro arquivo
+        if (firstFile) {
+            xsdContent = this.applySchemaAttributes(xsdContent); // Aplica atributos ao primeiro xs:schema
+            xsdContent = this.reorderSchemaDirectives(xsdContent); // Reorganiza as diretivas
+        }
+
+        return xsdContent;
     }
 }
